@@ -6,7 +6,7 @@ The goal of `jsonstream` is to help convert a stream of JSON data into a format 
 
 [Documentation](https://godoc.org/github.com/brettlangdon/jsonstream)
 
-## Introduction
+## Quick start
 To install `jsonstream` run `go get github.com/brettlangdon/jsonstream/cmd/...`
 
 Given an example log file `example.log`:
@@ -163,3 +163,12 @@ And if we wanted to extract just the `value` property from `data` we can do:
 $ cat example.log | jsonstream --tsv data | jsonstream --tsv value
 "Hello World"
 ```
+
+## Alternatives
+`jsonstream` is meant to be a very simple utility for transforming a stream of JSON into something that can be piped into another command.
+
+If you are interested in something more feature rich, check out these alternatives:
+* `jq` - https://stedolan.github.io/jq/
+    * Supports processing stream of newline delimited JSON
+* `underscore-cli` - https://github.com/ddopson/underscore-cli
+    * Does not support newline delimited JSON as input (as of right now)
