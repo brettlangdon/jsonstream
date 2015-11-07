@@ -1,24 +1,69 @@
 package main
 
 import (
-	"encoding/json"
-	"flag"
 	"fmt"
 	"io"
 	"os"
 
 	"github.com/brettlangdon/jsonstream"
+	"github.com/brettlangdon/jsonstream/vendor/github.com/alexflint/go-arg"
 )
 
-var input io.Reader
-var inputFile string
+var args struct {
+	File string   `arg:"-f,help:JSON stream file to read from"`
+	TSV  bool     `arg:"-t,help:Reformat the JSON stream to TSV '<value>\t<value>'"`
+	Key  bool     `arg:"-k,help:Whether or not to include the key in --tsv. '<key>=<value>\t<key>=<value>'"`
+	Keys []string `arg:"positional,help:Which keys from the input JSON stream to include in the output"`
+}
 
 func init() {
-	flag.StringVar(&inputFile, "file", nil, "")
+	arg.MustParse(&args)
+}
+
+func getReader() (reader *jsonstream.Reader, err error) {
+	var input io.Reader
+	input = os.Stdin
+	if args.File != "" {
+		input, err = os.Open(args.File)
+	}
+
+	if err == nil {
+		reader = jsonstream.NewReader(input, args.Keys)
+	}
+	return reader, err
+}
+
+func getFormatter() (formatter *jsonstream.Formatter, err error) {
+	var format jsonstream.FormatType
+	format = jsonstream.FormatJSON
+
+	if args.TSV {
+		format = jsonstream.FormatTSV
+		if args.Key {
+			format = jsonstream.FormatTSVKey
+		}
+	}
+
+	if err == nil {
+		formatter = jsonstream.NewFormatter(format)
+	}
+	return formatter, err
 }
 
 func main() {
-	reader := jsonstream.NewReader(os.Stdin)
+	var err error
+	var reader *jsonstream.Reader
+	var formatter *jsonstream.Formatter
+
+	reader, err = getReader()
+	if err != nil {
+		panic(err)
+	}
+	formatter, err = getFormatter()
+	if err != nil {
+		panic(err)
+	}
+
 	for {
 		data, err := reader.ReadLine()
 		if err == io.EOF {
@@ -29,7 +74,7 @@ func main() {
 		}
 
 		var output []byte
-		output, err = json.Marshal(data)
+		output, err = formatter.Format(data)
 		if err != nil {
 			panic(err)
 		}
