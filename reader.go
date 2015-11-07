@@ -7,11 +7,14 @@ import (
 	"io"
 )
 
+// Reader is used for reading newline delimited JSON objects from an input io.Reader
 type Reader struct {
 	buffer *bufio.Reader
 	keys   map[string]bool
 }
 
+// NewReader will create a new Reader from the provided io.Reader and keys
+// k, when not an empty slice, will tell the Reader to only include the provided keys from the input JSON object
 func NewReader(r io.Reader, k []string) *Reader {
 	var keys map[string]bool
 	keys = make(map[string]bool, 0)
@@ -40,6 +43,7 @@ func (reader *Reader) processData(data interface{}) (processed map[string]interf
 	return processed, err
 }
 
+// ReadLine will read the next JSON object from the input io.Reader
 func (reader *Reader) ReadLine() (data interface{}, err error) {
 	var line []byte
 	var isPrefix bool

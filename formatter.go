@@ -7,24 +7,31 @@ import (
 	"sort"
 )
 
+// FormatType denotes the output formatting types supported by jsonstream
 type FormatType int
 
 const (
+	// FormatJSON informs the Formatter to output as a JSON object
 	FormatJSON FormatType = iota
+	// FormatTSV informs the Formatter to output as a tab separated JSON encoded values
 	FormatTSV
+	// FormatTSVKey informs the Formatter to output as a tab separated `<key>=<value>` pairs
 	FormatTSVKey
 )
 
+// Formatter is used for formatting any data into a byte slice
 type Formatter struct {
 	format FormatType
 }
 
+// NewFormatter will create a new Formatter with the designated output format
 func NewFormatter(format FormatType) *Formatter {
 	return &Formatter{
 		format: format,
 	}
 }
 
+// Format the provided data into the output format designated for this Formatter
 func (formatter *Formatter) Format(data interface{}) (buf []byte, err error) {
 	if formatter.format == FormatJSON {
 		buf, err = formatter.formatJSON(data)
