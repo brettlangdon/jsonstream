@@ -5,8 +5,8 @@ import (
 	"io"
 	"os"
 
+	"github.com/alexflint/go-arg"
 	"github.com/brettlangdon/jsonstream"
-	"github.com/brettlangdon/jsonstream/vendor/github.com/alexflint/go-arg"
 )
 
 var args struct {
