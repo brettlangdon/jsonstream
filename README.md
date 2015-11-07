@@ -1,10 +1,10 @@
 jsonstream
 ==========
+[![GoDoc](https://godoc.org/github.com/brettlangdon/jsonstream?status.svg)](https://godoc.org/github.com/brettlangdon/jsonstream)
+
 `jsonstream` is a utility for interacting with a newline delimited JSON stream (e.g. log files which log as JSON).
 
 The goal of `jsonstream` is to help convert a stream of JSON data into a format more friendly to typical UNIX tools.
-
-[Documentation](https://godoc.org/github.com/brettlangdon/jsonstream)
 
 ## Quick start
 To install `jsonstream` run `go get github.com/brettlangdon/jsonstream/cmd/...`
